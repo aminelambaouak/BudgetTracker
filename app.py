@@ -43,11 +43,11 @@ class Transaction:
         print(self)
         
     def getBalance(self):
-        balance = self.incomes() - self.expenses()
+        balance = sum(self.listIncomes) - sum(self.expensesList)
         return balance
     # print a string 
     def __str__(self):
-         return f'The sum of your expenses is : {sum(self.expensesList):.2f}, total income : {sum(self.listIncomes):.2f} and the balace : {self.getBalance():.2f}'
+         return f'The sum of your expenses is : {sum(self.expensesList):.2f}, total income : {sum(self.listIncomes):.2f} and the balance : {self.getBalance():.2f}'
 
     
 a = Transaction()
