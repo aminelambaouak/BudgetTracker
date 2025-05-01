@@ -1,11 +1,10 @@
 #Budget Tracker Application
 import pandas as pd
+import json
 
 class BudgetTracker:
     def __init__(self,  budget= None):
         self.budget = budget
-        self.expensesCategories = []
-
         self.expensesDict = {}
         self.AmountsDict = {}
     #ask for incomes
@@ -70,13 +69,21 @@ class BudgetTracker:
                         total expenses :  {sum(self.expensesDict.values()):.2f}
                         balance : {self.getBalance():.2f}"""
                     
-    #def extractData(self):
+    def extractData(self):
+        data = {
+            "income": self.AmountsDict,
+            "expenses": self.expensesDict
+        }
+        with open("budget_data.json", "w") as file:
+            json.dump(data, file)
                 
-        
+        with open("budget_data.json", "r") as file:
+            loaded_data = json.load(file)
+            print('Your data = ', loaded_data)
      
 
     
 a = BudgetTracker()
 print(a.incomes())
 print(a.expenses())
-#print(a.extractData())
+print(a.extractData())
