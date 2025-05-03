@@ -112,21 +112,21 @@ class BudgetTracker:
         for db in myCursor:
             print(db)
         # Create a cursor object to execute SQL commands
-        myCursor.execute('''CREATE TABLE IF NOT EXISTS my_balances (  income_category VARCHAR(20),
-                                                                    income_amount REAL,
-                                                                    expense_category VARCHAR(20),
-                                                                    expense_amount REAL);''')
+        myCursor.execute('''CREATE TABLE IF NOT EXISTS my_incomes (  income_category VARCHAR(20),
+                                                                    income_amount REAL)''')
+        myCursor.execute('''CREATE TABLE IF NOT EXISTS my_expenses (  expense_category VARCHAR(20),
+                                                                    expense_amount REAL)''')       
         # Insert income entries (with NULL for expense columns)
         for category, amount in self.AmountsDict.items():
             myCursor.execute(
-                "INSERT INTO my_balances (income_category, income_amount, expense_category, expense_amount) VALUES (%s, %s, %s, %s)",
-                (category, amount, None, None)
+                "INSERT INTO my_incomes (income_category, income_amount) VALUES (%s, %s)",
+                (category, amount)
             )
         # Insert expense entries (with NULL for income columns)
         for category, amount in self.expensesDict.items():
             myCursor.execute(
-                "INSERT INTO my_balances (income_category, income_amount, expense_category, expense_amount) VALUES (%s, %s, %s, %s)",
-                (None, None, category, amount) 
+                "INSERT INTO my_expenses (expense_category, expense_amount) VALUES (%s, %s)",
+                (category, amount)
             )
         mydb.commit()
         # Close connection
