@@ -1,6 +1,5 @@
 #Budget Tracker Application
 import json
-import sqlite3
 import mysql.connector
 
 class BudgetTracker:
@@ -81,7 +80,7 @@ class BudgetTracker:
                         expenses : {self.expensesDict}
                         total expenses :  {sum(self.expensesDict.values()):.2f}
                         balance : {self.getBalance():.2f}"""
-                    
+    # Extract the data in JSON file
     def extractData(self):
         data = {
             "income": self.AmountsDict,
@@ -94,7 +93,7 @@ class BudgetTracker:
         with open("budget_data.json", "r") as file:
             loaded_data = json.load(file)
             print('Your data = ', loaded_data)
-    
+    # Load the data collected in mysql database
     def database(self):
         # Connect to database (it will create one if it doesn't exist)
         mydb = mysql.connector.connect(
@@ -104,28 +103,20 @@ class BudgetTracker:
                         database = 'BudgetTracker'
                         )
         myCursor = mydb.cursor()
-
         # Create the new database if it does not exist
         myCursor.execute("CREATE DATABASE IF NOT EXISTS BudgetTracker")
 
         # Confirm that the database was created by listing the databases
         myCursor.execute("SHOW DATABASES")
-
         # Fetch and print the databases
         for db in myCursor:
             print(db)
-
         # Create a cursor object to execute SQL commands
-
-        
         myCursor.execute('''CREATE TABLE IF NOT EXISTS my_balances (  income_category VARCHAR(20),
                                                                     income_amount REAL,
                                                                     expense_category VARCHAR(20),
                                                                     expense_amount REAL);''')
-        
-
-
-            # Insert income entries (with NULL for expense columns)
+        # Insert income entries (with NULL for expense columns)
         for category, amount in self.AmountsDict.items():
             myCursor.execute(
                 "INSERT INTO my_balances (income_category, income_amount, expense_category, expense_amount) VALUES (%s, %s, %s, %s)",
@@ -137,18 +128,10 @@ class BudgetTracker:
                 "INSERT INTO my_balances (income_category, income_amount, expense_category, expense_amount) VALUES (%s, %s, %s, %s)",
                 (None, None, category, amount) 
             )
-
-            
         mydb.commit()
-
         # Close connection
         myCursor.close()
-        
-        
-        
-        
-        
-    
+
 a = BudgetTracker()
 print(a.incomes())
 print(a.expenses())
