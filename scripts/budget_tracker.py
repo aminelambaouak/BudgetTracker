@@ -128,24 +128,18 @@ class BudgetTracker:
             # Insert income entries (with NULL for expense columns)
         for category, amount in self.AmountsDict.items():
             myCursor.execute(
-                "INSERT INTO my_balances (income_category, income_amount, expense_category, expense_amount) VALUES (?, ?, ?, ?)",
-                (category, amount, None, None);
+                "INSERT INTO my_balances (income_category, income_amount, expense_category, expense_amount) VALUES (%s, %s, %s, %s)",
+                (category, amount, None, None)
             )
-
         # Insert expense entries (with NULL for income columns)
         for category, amount in self.expensesDict.items():
             myCursor.execute(
-                "INSERT INTO my_balances (income_category, income_amount, expense_category, expense_amount) VALUES (?, ?, ?, ?)",
-                (None, None, category, amount)
+                "INSERT INTO my_balances (income_category, income_amount, expense_category, expense_amount) VALUES (%s, %s, %s, %s)",
+                (None, None, category, amount) 
             )
-        
-        myCursor.execute('''SELECT * FROM my_balances;''')
-        rows = myCursor.fetchall()
 
-        for row in rows:
-            print(row)
             
-        myCursor.commit()
+        mydb.commit()
 
         # Close connection
         myCursor.close()
@@ -159,4 +153,4 @@ a = BudgetTracker()
 print(a.incomes())
 print(a.expenses())
 print(a.extractData())
-#print(a.database())
+print(a.database())
